@@ -40,7 +40,6 @@ class PhoneNumber extends StatelessWidget {
                   child: Selector<RegistState, String>(
                     selector: (_, registState) => registState.phoneCode,
                     builder: (_, phoneCode, __) {
-                      print('rebuild code');
                       return Text(
                         phoneCode,
                         style: theme.textTheme.subtitle2,
@@ -48,17 +47,6 @@ class PhoneNumber extends StatelessWidget {
                     },
                   ),
                 ),
-
-                // prefix: Text(
-                //   '+20',
-                //   style: theme.textTheme.subtitle2,
-                // ),
-                // prefixIconConstraints: BoxConstraints(
-                //   minWidth: 40,
-                //   maxWidth: 41,
-                //   minHeight: 18,
-                //   maxHeight: 20
-                // ),
               ),
               cursorColor: theme.primaryColor,
               style: TextStyle(fontSize: theme.textTheme.subtitle2.fontSize),

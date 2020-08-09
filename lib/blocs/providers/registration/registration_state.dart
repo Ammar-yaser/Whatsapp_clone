@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RegistState with ChangeNotifier {
-  String _phoneCode = '+20', _phone;
+  String _phoneCode = '+20', _phone, _smsCode, _autoCode;
   TextEditingController _pinController;
 
   // Setters
@@ -12,17 +12,20 @@ class RegistState with ChangeNotifier {
     _phoneCode = val;
     notifyListeners();
   }
-  void setController(TextEditingController controller) {
-    _pinController = controller;
+  set autoCode(String val) {
+    _autoCode = val;
+    notifyListeners();
   }
- 
+  void setSmsCode(String val) => _smsCode = val;
+  void setController(TextEditingController controller) =>
+      _pinController = controller;
+
   //Getters
   String get phone => _phone;
   String get phoneCode => _phoneCode;
+  String get autoCode => _autoCode;
+  String get smsCode => _smsCode;
   TextEditingController get pinController => _pinController;
 
-
-  registration() {
-    
-  }
+  registration() {}
 }

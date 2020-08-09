@@ -8,8 +8,6 @@ import '../../../blocs/validators/RegExp.dart';
 import '../../widgets/PhoneNumber.dart';
 import 'PhoneVerification.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 class Signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -47,9 +45,6 @@ class _SignupFormState extends State<SignupForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
 
-  String phoneNo, verificationId, smsCode;
-
-  bool codeSent = false;
   String phoneValidate(String fieldVal) {
     if (fieldVal.isEmpty) {
       return 'You should write your number';
@@ -86,13 +81,20 @@ class _SignupFormState extends State<SignupForm> {
               if (isValid == null) {
                 formKey.currentState.save();
                 print(registState.phone);
-                authServices.verifyPhone('+201204536647', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => PhoneVerification()),
-                  );
-                });
+                authServices.verifyPhone(
+                  phone: '+201271852177',
+                  pinCodePage: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              PhoneVerification()),
+                    );
+                  },
+                  autoCode: () {
+                    registState.autoCode = '000000';
+                  }
+                );
               }
             },
           ),
