@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+
+// Pages && Widgets
+import '../screens/chat/Chat.dart';
+
+class ContactItem extends StatelessWidget {
+  final String image, name, lastMessage, date;
+
+  const ContactItem({this.image, this.name, this.lastMessage, this.date});
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    return Container(
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => Chat(),
+                ),
+              );
+            },
+            onLongPress: () {
+              // TODO: delete chat
+            },
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: 55,
+                    height: 55,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(55),
+                      image: DecorationImage(
+                        image: AssetImage(image),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Container(
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    name,
+                                    style: theme.textTheme.headline6,
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    lastMessage,
+                                    style: theme.textTheme.caption,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                Text(date),
+                                // TODO: new messages counter
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: SizedBox(
+              height: 16,
+              width: MediaQuery.of(context).size.width - 80,
+              child: Divider(
+                height: 1,
+                color: Colors.grey[300],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
