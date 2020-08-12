@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -19,15 +20,15 @@ class AuthServices {
   String verId;
   String userId;
 
-
-
-  Future<void> verifyPhone(
-      {String phone, Function codeSent, Function onAutoVerComplete}) async {
+  Future<FirebaseUser> verifyPhone(
+      {String phone, Function codeSent, VoidCallback autoCode}) async {
+    FirebaseUser user;
     final PhoneVerificationCompleted verified =
         (AuthCredential credential) async {
-      FirebaseUser user = await signIn(credential);
-      if (user != null) {
-        onAutoVerComplete(user);
+      FirebaseUser result = await signIn(credential);
+      if (result != null) {
+        autoCode();
+        user = result;
       }
     };
 
@@ -64,6 +65,8 @@ class AuthServices {
       codeSent: smsSent,
       codeAutoRetrievalTimeout: autoTimeout,
     );
+
+    return user;
   }
 
   //SignIn

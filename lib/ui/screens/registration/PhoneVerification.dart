@@ -23,7 +23,7 @@ class PhoneVerification extends StatelessWidget {
               Text('Sync verification code', style: theme.textTheme.headline6),
               SizedBox(height: 15),
               Text(
-                'Sync sms code automaticaly: 30 sec',
+                'Sync sms code automaticaly in: 30 sec',
                 style: theme.textTheme.caption,
               ),
               SizedBox(height: 25),
@@ -85,7 +85,7 @@ class _PinCodeFieldsState extends State<PinCodeFields> {
         return PinCodeTextField(
           length: 6,
           obsecureText: true,
-          autoFocus: true,
+          autoFocus: false,
           enabled: false,
           autoDisposeControllers: false,
           controller: _pinController,
@@ -131,7 +131,7 @@ class _PinCodeFieldsState extends State<PinCodeFields> {
 //           if (_start < 1) {
 //             timer.cancel();
 //           } else {
-//             _start = _start - 1;
+//             _start -= 1;
 //           }
 //         },
 //       ),

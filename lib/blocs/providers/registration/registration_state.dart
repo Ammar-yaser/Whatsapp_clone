@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../services/auth_services.dart';
 
@@ -8,18 +9,15 @@ class RegistState with ChangeNotifier {
 
   // Setters
   void setPhone(String val) => _phone = "$_phoneCode$val";
-
   set phoneCode(String val) {
     _phoneCode = val;
     notifyListeners();
   }
-
   // this is for set 000000 for pin code auto retrive
   set autoCode(String val) {
     _autoCode = val;
     notifyListeners();
   }
-
   // error of phone number validation
   set errorMessage(String val) {
     if (val == null) {
@@ -30,7 +28,6 @@ class RegistState with ChangeNotifier {
       notifyListeners();
     }
   }
-
   // set verification code from pin code fields if user enter it maniually
   void setSmsCode(String val) => _smsCode = val;
 
@@ -41,14 +38,23 @@ class RegistState with ChangeNotifier {
   String get smsCode => _smsCode;
   String get errorMessage => _errorMessage;
 
-  void autoRegistration({Function pinPage, Function homePage}) {
-    auth.verifyPhone(
+  Future<FirebaseUser> autoRegistration({Function pinPage}) async {
+    FirebaseUser user =  await auth.verifyPhone(
       phone: _phone,
       codeSent: pinPage,
-      onAutoVerComplete: (user) {
+      autoCode: () {
         _autoCode = '000000';
-        homePage(user);
       },
     );
+
+    if (user != null) {
+      return user;
+    } else {
+      throw "auto retrive faield";
+    }
+  }
+
+  void maniualRegistration() {
+    auth.signInWithOTP(_smsCode);
   }
 }

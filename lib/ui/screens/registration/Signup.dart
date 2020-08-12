@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone/blocs/validators/FormsValidation.dart';
@@ -102,8 +103,8 @@ class _SignupFormState extends State<SignupForm> {
               validation.saveFormData(
                 formState: formKey.currentState,
                 phone: _phoneController.text.trim(),
-                sendData: () {
-                  registState.autoRegistration(
+                sendData: () async {
+                  FirebaseUser user = await registState.autoRegistration(
                     pinPage: () {
                       Navigator.push<Widget>(
                         context,
@@ -113,15 +114,12 @@ class _SignupFormState extends State<SignupForm> {
                         ),
                       );
                     },
-                    homePage: (user) {
-                      Navigator.push<Widget>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              Home(userId: user.uid),
-                        ),
-                      );
-                    },
+                  );
+                  Navigator.push<Widget>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => Home(userId: user.uid),
+                    ),
                   );
                 },
               );

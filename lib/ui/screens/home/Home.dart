@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 // Pages
@@ -31,7 +32,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () {
+              // Firestore.instance
+              //     .collection('users')
+              //     .document(widget.userId)
+              //     .setData({'name': 'Ammar'});
+            },
           ),
           PopupMenuButton(
             itemBuilder: (BuildContext context) {
