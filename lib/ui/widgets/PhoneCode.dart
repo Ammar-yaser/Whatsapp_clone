@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:provider/provider.dart';
-import '../../blocs/providers/registration/registration_state.dart';
+
 
 class PhoneCode extends StatelessWidget {
+
+  final Function onChanged;
+  final String initialCode;
+  const PhoneCode({@required this.onChanged, this.initialCode});
+
   @override
   Widget build(BuildContext context) {
-    RegistState registState = Provider.of(context, listen: false);
     return CountryCodePicker(
       builder: (code) {
         return Container(
@@ -25,9 +28,10 @@ class PhoneCode extends StatelessWidget {
           ),
         );
       },
-      onChanged: (code) => registState.phoneCode = code.dialCode,
-      initialSelection: 'EG',
+      onChanged: onChanged,
+      initialSelection: CountryCode(code: initialCode).code,
       favorite: ['+20', 'EG'],
     );
   }
 }
+

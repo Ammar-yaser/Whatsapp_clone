@@ -13,7 +13,7 @@ class ContactItem extends StatelessWidget {
     return Container(
       child: Column(
         children: <Widget>[
-          GestureDetector(
+          InkWell(
             onTap: () {
               Navigator.push(
                 context,

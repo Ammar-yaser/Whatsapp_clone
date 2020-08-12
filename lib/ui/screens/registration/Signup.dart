@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:whatsapp_clone/blocs/validators/FormsValidation.dart';
 import '../../../blocs/providers/registration/registration_state.dart';
 import '../../../services/auth_services.dart';
 import '../../../blocs/validators/RegExp.dart';
 
+import '../home/Home.dart';
 import '../../widgets/PhoneNumber.dart';
 import 'PhoneVerification.dart';
 
@@ -45,29 +46,48 @@ class _SignupFormState extends State<SignupForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
 
-  String phoneValidate(String fieldVal) {
-    if (fieldVal.isEmpty) {
-      return 'You should write your number';
-    } else if (!phoneRegExp.hasMatch(fieldVal)) {
-      return 'Invalid Phone number';
-    } else {
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     RegistState registState = Provider.of<RegistState>(context, listen: false);
+    FormsValidation validation =
+        Provider.of<FormsValidation>(context, listen: false);
     AuthServices authServices =
         Provider.of<AuthServices>(context, listen: false);
-    print('rebuild');
+
     return Form(
       key: formKey,
       child: Column(
         children: [
           PhoneNumber(
-            onSaved: (String phone) => registState.setPhone(phone),
             controller: _phoneController,
+            onCodeChanged: (code) => registState.phoneCode = code.dialCode,
+            onSaved: (String phone) => registState.setPhone(phone.trim()),
+            countryCode: Selector<RegistState, String>(
+              selector: (_, code) => code.phoneCode,
+              builder: (_, phoneCode, __) {
+                return Text(
+                  phoneCode,
+                  style: Theme.of(context).textTheme.subtitle2,
+                );
+              },
+            ),
+            initialCode: registState.phoneCode,
+          ),
+          SizedBox(height: 6),
+          Row(
+            children: [
+              SizedBox(width: 10),
+              Selector<RegistState, String>(
+                selector: (_, e) => e.errorMessage,
+                builder: (context, message, _) {
+                  return Text(
+                    message,
+                    style: TextStyle(
+                        color: Theme.of(context).errorColor, fontSize: 13),
+                  );
+                },
+              ),
+            ],
           ),
           SizedBox(height: 10),
           RaisedButton(
@@ -75,27 +95,36 @@ class _SignupFormState extends State<SignupForm> {
             color: Theme.of(context).primaryColor,
             textColor: Colors.white,
             onPressed: () {
-              // ToDo: show this error message to user
-              String isValid; //phoneValidate(_phoneController.text);
-              print(isValid);
-              if (isValid == null) {
-                formKey.currentState.save();
-                print(registState.phone);
-                authServices.verifyPhone(
-                  phone: '+201271852177',
-                  pinCodePage: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
+              // save phone error message to show it
+              registState.errorMessage =
+                  validation.phoneValidate(_phoneController.text.trim());
+
+              validation.saveFormData(
+                formState: formKey.currentState,
+                phone: _phoneController.text.trim(),
+                sendData: () {
+                  registState.autoRegistration(
+                    pinPage: () {
+                      Navigator.push<Widget>(
+                        context,
+                        MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              PhoneVerification()),
-                    );
-                  },
-                  autoCode: () {
-                    registState.autoCode = '000000';
-                  }
-                );
-              }
+                              PhoneVerification(),
+                        ),
+                      );
+                    },
+                    homePage: (user) {
+                      Navigator.push<Widget>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              Home(userId: user.uid),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
             },
           ),
         ],

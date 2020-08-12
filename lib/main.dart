@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whatsapp_clone/blocs/validators/FormsValidation.dart';
 
 // Pages
 import 'blocs/providers/registration/registration_state.dart';
@@ -17,12 +18,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthServices>(
-          create: (_) => AuthServices(),
+        Provider<FormsValidation>(
+          create: (_) => FormsValidation(),
         ),
         ChangeNotifierProvider<RegistState>(
           create: (_) => RegistState(),
-        )
+        ),
+        Provider<AuthServices>(
+          create: (_) => AuthServices(),
+        ),
       ],
       child: StartPoint(),
     );

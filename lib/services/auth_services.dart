@@ -1,6 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -20,17 +18,17 @@ class AuthServices {
 
   String verId;
   String userId;
-  // String autoCode;
+
+
 
   Future<void> verifyPhone(
-      {phone, Function pinCodePage, Function autoCode}) async {
+      {String phone, Function codeSent, Function onAutoVerComplete}) async {
     final PhoneVerificationCompleted verified =
         (AuthCredential credential) async {
-      autoCode();
-      signIn(credential).then(
-        (user) => user == null ? print('Failed signed in') : userId = user.uid,
-      );
-      print(userId);
+      FirebaseUser user = await signIn(credential);
+      if (user != null) {
+        onAutoVerComplete(user);
+      }
     };
 
     final PhoneVerificationFailed verificationfailed = (AuthException authE) {
@@ -50,7 +48,7 @@ class AuthServices {
     };
 
     final PhoneCodeSent smsSent = (String verificationId, [int forceResend]) {
-      pinCodePage();
+      codeSent();
       verId = verificationId;
     };
 

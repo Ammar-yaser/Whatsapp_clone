@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -56,7 +54,8 @@ class PhoneVerification extends StatelessWidget {
                                         : user.uid);
                               },
                       ),
-                    )
+                    ),
+                    
                   ],
                 ),
               ),
@@ -77,51 +76,46 @@ class _PinCodeFieldsState extends State<PinCodeFields> {
   TextEditingController _pinController = TextEditingController();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    RegistState registState = Provider.of<RegistState>(context);
-    registState.setController(_pinController);
-  }
-
-  @override
   Widget build(BuildContext context) {
     RegistState registState = Provider.of<RegistState>(context, listen: false);
     return Selector<RegistState, String>(
-        selector: (_, registState) => registState.autoCode,
-        builder: (context, autoCode, _) {
-          _pinController.text = autoCode;
-          return PinCodeTextField(
-            length: 6,
-            obsecureText: false,
-            autoFocus: true,
-            autoDisposeControllers: false,
-            controller: _pinController,
-            textInputType: TextInputType.number,
-            animationType: AnimationType.fade,
-            pinTheme: PinTheme(
-              shape: PinCodeFieldShape.underline,
-              borderRadius: BorderRadius.circular(5),
-              fieldHeight: 50,
-              fieldWidth: 40,
-              activeFillColor: Colors.white,
-              inactiveColor: Colors.grey,
-            ),
-            textStyle: Theme.of(context).textTheme.subtitle2,
-            animationDuration: Duration(milliseconds: 300),
-            backgroundColor: Colors.transparent,
-            onCompleted: (v) => registState.setSmsCode(v),
-            onChanged: (value) {
-              print(value);
-            },
-            beforeTextPaste: (text) {
-              print("Allowing to paste $text");
+      selector: (_, registState) => registState.autoCode,
+      builder: (context, autoCode, _) {
+        _pinController.text = autoCode;
+        return PinCodeTextField(
+          length: 6,
+          obsecureText: true,
+          autoFocus: true,
+          enabled: false,
+          autoDisposeControllers: false,
+          controller: _pinController,
+          textInputType: TextInputType.number,
+          animationType: AnimationType.fade,
+          pinTheme: PinTheme(
+            shape: PinCodeFieldShape.underline,
+            borderRadius: BorderRadius.circular(5),
+            fieldHeight: 50,
+            fieldWidth: 40,
+            activeFillColor: Colors.white,
+            inactiveColor: Colors.grey,
+          ),
+          textStyle: Theme.of(context).textTheme.subtitle2,
+          animationDuration: Duration(milliseconds: 300),
+          backgroundColor: Colors.transparent,
+          onCompleted: (v) => registState.setSmsCode(v),
+          onChanged: (value) {
+            print(value);
+          },
+          beforeTextPaste: (text) {
+            print("Allowing to paste $text");
 
-              //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-              //but you can show anything you want here, like your pop up saying wrong paste format or etc
-              return true;
-            },
-          );
-        });
+            //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+            //but you can show anything you want here, like your pop up saying wrong paste format or etc
+            return true;
+          },
+        );
+      },
+    );
   }
 }
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class Status extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
     return Container(
       color: Colors.grey[300],
       child: CustomScrollView(
