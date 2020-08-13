@@ -1,6 +1,6 @@
 RegExp usernameRegExp =
     RegExp(r"^[أ-ي a-zA-zàâäèéêëîïôœùûüÿçÀÂÄÈÉÊËÎÏÔŒÙÛÜŸÇ]{3,50}$");
-RegExp phoneRegExp = RegExp(r'^[0-9]{6,20}$');
+RegExp phoneRegExp = RegExp(r'^[0-9]{10,11}$');
 RegExp urlRegExp = RegExp(
     r'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}');
 RegExp emailRegExp = RegExp(

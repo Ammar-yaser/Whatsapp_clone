@@ -22,7 +22,6 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': userId,
       'phone': phone,
       'name': name,
       'image': profileImage,

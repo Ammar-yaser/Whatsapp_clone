@@ -1,9 +1,9 @@
-class APIResponse<T> {
+class ApiResponse<T> {
 
   T data;
   bool error;
   String errorMessage;
 
-  APIResponse({this.data, this.error = false, this.errorMessage});
+  ApiResponse({this.data, this.error = false, this.errorMessage});
 
 }

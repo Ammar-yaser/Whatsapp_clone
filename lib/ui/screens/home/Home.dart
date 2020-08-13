@@ -7,9 +7,7 @@ import 'Contacts.dart';
 import 'status_page/Status.dart';
 
 class Home extends StatefulWidget {
-  final userId;
-
-  const Home({this.userId});
+  static const String id = "home";
   @override
   _HomeState createState() => _HomeState();
 }
@@ -20,12 +18,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    // _tabController.addListener(_isProductsPage);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.userId);
     return Scaffold(
       appBar: AppBar(
         title: Text('WhatsApp'),
