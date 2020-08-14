@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone/blocs/validators/FormsValidation.dart';
+import 'package:whatsapp_clone/ui/screens/user_info/UserInfo.dart';
 
 // Pages
 import 'blocs/providers/registration/registration_state.dart';
 import 'services/auth_services.dart';
 import 'ui/screens/home/Home.dart';
 import 'ui/screens/registration/PhoneVerification.dart';
-import 'ui/screens/registration/Signup.dart';
+import 'ui/screens/registration/Registration.dart';
 
 void main() {
   runApp(MyApp());
@@ -48,10 +49,11 @@ class StartPoint extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Registration(),
+      initialRoute: UserInfo.id,
       routes: {
         Registration.id: (BuildContext context) => Registration(),
         PhoneVerification.id: (BuildContext context) => PhoneVerification(),
+        UserInfo.id: (BuildContext context) => UserInfo(),
         Home.id: (BuildContext context) => Home(),
       },
     );

@@ -89,12 +89,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
             textColor: Colors.white,
             onPressed: () {
               // save phone error message to show it
-              registState.errorMessage =
-                  validation.phoneValidate(_phoneController.text.trim());
+              String phone = _phoneController.text.trim();
+              registState.errorMessage = validation.phoneValidate(phone);
 
               validation.saveFormData(
                 formState: formKey.currentState,
-                phone: _phoneController.text.trim(),
+                phone: phone,
                 sendData: () async {
                   await registState.verifyPhone(
                     pinPage: () =>

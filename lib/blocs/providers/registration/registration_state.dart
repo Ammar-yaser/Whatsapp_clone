@@ -97,6 +97,7 @@ class RegistState with ChangeNotifier {
     );
   }
 
+  // Registration maniually if auto retriev timedout
   Future<ApiResponse<FirebaseUser>> maniualRegistration() async {
     ApiResponse<FirebaseUser> result =
         await auth.signInWithOTP(_smsCode, _verId);
