@@ -4,6 +4,7 @@ import 'package:whatsapp_clone/blocs/validators/FormsValidation.dart';
 import '../../../blocs/providers/registration/registration_state.dart';
 import '../../widgets/PhoneNumber.dart';
 import 'PhoneVerification.dart';
+import '../user_info/UserInfo.dart';
 
 class Registration extends StatelessWidget {
   static const String id = "registration";
@@ -99,6 +100,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   await registState.verifyPhone(
                     pinPage: () =>
                         Navigator.pushNamed(context, PhoneVerification.id),
+                    onAutoRetrievComplete: () =>
+                        Navigator.pushNamed(context, UserInfo.id),
                   );
                 },
               );

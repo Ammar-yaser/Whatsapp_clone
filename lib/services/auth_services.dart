@@ -6,14 +6,15 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 class AuthServices {
   //SignIn
   Future<ApiResponse<FirebaseUser>> signIn(AuthCredential authCreds) async {
-    Future<ApiResponse<FirebaseUser>> user =
+    Future<ApiResponse<FirebaseUser>> response =
         _auth.signInWithCredential(authCreds).then((result) {
+      // result.additionalUserInfo.isNewUser;
       return ApiResponse<FirebaseUser>(data: result.user, error: false);
     }).catchError((e) {
       return ApiResponse<FirebaseUser>(
           error: true, errorMessage: "faild to sign in $e");
     });
-    return user;
+    return response;
   }
 
   Future<ApiResponse<FirebaseUser>> signInWithOTP(
@@ -23,6 +24,18 @@ class AuthServices {
       smsCode: smsCode,
     );
     return signIn(authCreds);
+  }
+
+  // get current user
+  Future<ApiResponse<FirebaseUser>> getCurrentUser() async {
+    ApiResponse<FirebaseUser> response = await _auth.currentUser().then((user) {
+      return ApiResponse<FirebaseUser>(data: user, error: false);
+    }).catchError((e) {
+      return ApiResponse<FirebaseUser>(
+          error: true, errorMessage: 'something wrong in get current user');
+    });
+
+    return response;
   }
 
   //Sign out

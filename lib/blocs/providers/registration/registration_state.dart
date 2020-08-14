@@ -56,11 +56,13 @@ class RegistState with ChangeNotifier {
   bool get isTimeout => _isTimeout;
 
   // phone number verfication and auto retriev sms code
-  Future<void> verifyPhone({Function pinPage}) async {
+  Future<void> verifyPhone(
+      {Function pinPage, Function onAutoRetrievComplete}) async {
     final PhoneVerificationCompleted verified = (AuthCredential cred) async {
       ApiResponse<FirebaseUser> response = await auth.signIn(cred);
       if (!response.error) {
         autoCode = '000000';
+        onAutoRetrievComplete();
       }
     };
 

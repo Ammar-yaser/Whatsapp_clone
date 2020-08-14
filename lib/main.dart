@@ -49,7 +49,7 @@ class StartPoint extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: UserInfo.id,
+      initialRoute: Registration.id,
       routes: {
         Registration.id: (BuildContext context) => Registration(),
         PhoneVerification.id: (BuildContext context) => PhoneVerification(),

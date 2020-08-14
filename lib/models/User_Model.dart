@@ -2,12 +2,14 @@ class User {
   String userId;
   String phone;
   String name;
+  String about;
   String profileImage;
 
   User({
     this.userId,
     this.phone,
     this.name,
+    this.about,
     this.profileImage,
   });
 
@@ -16,6 +18,7 @@ class User {
       userId: user['id'],
       phone: user['phone'],
       name: user['name'],
+      about: user['about'],
       profileImage: user['image'],
     );
   }
@@ -23,8 +26,9 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'phone': phone,
-      'name': name,
-      'image': profileImage,
+      'name': name ?? '',
+      'about': about ?? '',
+      'image': profileImage ?? '',
     };
   }
 }
