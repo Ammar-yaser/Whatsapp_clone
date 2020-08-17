@@ -7,14 +7,14 @@ AuthServices auth = AuthServices();
 FirebaseAuth _auth = FirebaseAuth.instance;
 
 class RegistState with ChangeNotifier {
-  String _phoneCode = '+20',
-      _phone,
-      _errorMessage = '',
-      _autoCode,
-      _smsCode,
-      _verId;
-
-  bool _isTimeout = false;
+  String _phoneCode = '+20', // country code picker
+      _phone, // phone number picker
+      _errorVerMessage = '', // the errors of verification phone number
+      _smsCode, // sms code picker from user if auto retriev failed
+      _verId; // verification id used for sign in with credential maniually
+  int _resendToken;
+  bool _isTimeout = false, // for auto retriev timeout
+      _isLoading = false; // for modal progress hud to display loading indicator
 
   // Setters
   void setPhone(String val) => _phone = "$_phoneCode$val";
@@ -23,19 +23,13 @@ class RegistState with ChangeNotifier {
     notifyListeners();
   }
 
-  // this is for set 000000 for pin code auto retrive
-  set autoCode(String val) {
-    _autoCode = val;
-    notifyListeners();
-  }
-
   // error of phone number validation
-  set errorMessage(String val) {
+  set errorVerMessage(String val) {
     if (val == null) {
-      _errorMessage = '';
+      _errorVerMessage = '';
       notifyListeners();
     } else {
-      _errorMessage = val;
+      _errorVerMessage = val;
       notifyListeners();
     }
   }
@@ -47,21 +41,25 @@ class RegistState with ChangeNotifier {
     notifyListeners();
   }
 
+  set isLoading(bool val) {
+    _isLoading = val;
+    notifyListeners();
+  }
+
   //Getters
   String get phoneCode => _phoneCode;
-  // String get phone => _phone;
-  String get errorMessage => _errorMessage;
-  String get autoCode => _autoCode;
-  // String get smsCode => _smsCode;
+  String get errorVerMessage => _errorVerMessage;
   bool get isTimeout => _isTimeout;
+  bool get isLoading => _isLoading;
 
-  // phone number verfication and auto retriev sms code
+  // phone number verfication and auto retrieval sms code
   Future<void> verifyPhone(
       {Function pinPage, Function onAutoRetrievComplete}) async {
     final PhoneVerificationCompleted verified = (AuthCredential cred) async {
+      isLoading = true;
       ApiResponse<FirebaseUser> response = await auth.signIn(cred);
       if (!response.error) {
-        autoCode = '000000';
+        isLoading = false;
         onAutoRetrievComplete();
       }
     };
@@ -69,17 +67,19 @@ class RegistState with ChangeNotifier {
     final PhoneVerificationFailed verificationfailed = (AuthException e) {
       switch (e.code) {
         case "invalidCredential":
-          errorMessage = "incorrect Phone number";
+          errorVerMessage = "incorrect Phone number";
           break;
         case "verifyPhoneNumberError":
-          errorMessage = "Check internet connection";
+          errorVerMessage = "No internet connection";
           break;
         default:
           print(e.code);
       }
+      isLoading = false;
     };
 
     final PhoneCodeSent smsSent = (String verificationId, [int forceResend]) {
+      isLoading = false;
       pinPage();
       _verId = verificationId;
     };
@@ -89,6 +89,7 @@ class RegistState with ChangeNotifier {
       isTimeout = true;
     };
 
+    isLoading = true;
     await _auth.verifyPhoneNumber(
       phoneNumber: _phone,
       timeout: Duration(seconds: 30),
@@ -96,13 +97,15 @@ class RegistState with ChangeNotifier {
       verificationFailed: verificationfailed,
       codeSent: smsSent,
       codeAutoRetrievalTimeout: autoTimeout,
+      forceResendingToken: _resendToken
     );
   }
 
   // Registration maniually if auto retriev timedout
   Future<ApiResponse<FirebaseUser>> maniualRegistration() async {
-    ApiResponse<FirebaseUser> result =
-        await auth.signInWithOTP(_smsCode, _verId);
+    Future<ApiResponse<FirebaseUser>> result =
+        auth.signInWithOTP(_smsCode, _verId);
+
     return result;
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone/blocs/validators/FormsValidation.dart';
 import '../../../blocs/providers/registration/registration_state.dart';
 import '../../widgets/PhoneNumber.dart';
-import 'PhoneVerification.dart';
 import '../user_info/UserInfo.dart';
+import 'sms_verification/smsVerification.dart';
 
 class Registration extends StatelessWidget {
   static const String id = "registration";
@@ -13,23 +14,32 @@ class Registration extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
-          child: Column(
-            children: [
-              Text('Enter your phone number', style: theme.textTheme.headline6),
-              SizedBox(height: 15),
-              Text(
-                'We will send OTP code for verification your phone number',
-                style: theme.textTheme.caption,
-                textAlign: TextAlign.center,
+      body: Selector<RegistState, bool>(
+        selector: (context, registState) => registState.isLoading,
+        builder: (context, isLoading, _) {
+          return ModalProgressHUD(
+            inAsyncCall: isLoading,
+            child: SafeArea(
+              child: Container(
+                padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
+                child: Column(
+                  children: [
+                    Text('Enter your phone number',
+                        style: theme.textTheme.headline6),
+                    SizedBox(height: 15),
+                    Text(
+                      'We will send OTP code for verification your phone number',
+                      style: theme.textTheme.caption,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 25),
+                    RegistrationForm(),
+                  ],
+                ),
               ),
-              SizedBox(height: 25),
-              RegistrationForm(),
-            ],
-          ),
-        ),
+            ),
+          );
+        }
       ),
     );
   }
@@ -73,7 +83,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           Container(
             alignment: Alignment.center,
             child: Selector<RegistState, String>(
-              selector: (_, e) => e.errorMessage,
+              selector: (_, e) => e.errorVerMessage,
               builder: (context, message, _) {
                 return Text(
                   message,
@@ -91,7 +101,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             onPressed: () {
               // save phone error message to show it
               String phone = _phoneController.text.trim();
-              registState.errorMessage = validation.phoneValidate(phone);
+              registState.errorVerMessage = validation.phoneValidate(phone);
 
               validation.saveFormData(
                 formState: formKey.currentState,
@@ -99,9 +109,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 sendData: () async {
                   await registState.verifyPhone(
                     pinPage: () =>
-                        Navigator.pushNamed(context, PhoneVerification.id),
+                        Navigator.pushNamed(context, SmsVerification.id),
                     onAutoRetrievComplete: () =>
-                        Navigator.pushNamed(context, UserInfo.id),
+                        Navigator.pushNamed(context, UserInfoData.id),
                   );
                 },
               );

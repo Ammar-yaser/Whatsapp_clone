@@ -1,44 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import '../../../blocs/ui_providers/userInfo_ui.dart';
 import '../../../blocs/providers/registration/UserInfo_state.dart';
 import '../home/Home.dart';
 
-class UserInfo extends StatelessWidget {
+class UserInfoData extends StatelessWidget {
   static const String id = "userInfo";
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => InfoUIState()),
-        Provider(create: (_) => UserInfoState())
+        ChangeNotifierProvider<InfoUIState>(create: (_) => InfoUIState()),
+        ChangeNotifierProvider<UserInfoState>(create: (_) => UserInfoState())
       ],
       child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // ToDo: image picker
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.grey[300],
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: 50,
-                      color: theme.primaryColor,
+        body: Selector<UserInfoState, bool>(
+            selector: (cxt, infoData) => infoData.isLoading,
+            builder: (cxt, isLoading, _) {
+              return ModalProgressHUD(
+                inAsyncCall: isLoading,
+                // just test 
+                progressIndicator: Container(
+                  child: Text('No internet connection'),
+                ),
+                child: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 50),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // ToDo: image picker
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.grey[300],
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 50,
+                              color: theme.primaryColor,
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          InfoFields(),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 30),
-                  InfoFields(),
-                ],
-              ),
-            ),
-          ),
-        ),
+                ),
+              );
+            }),
       ),
     );
   }
