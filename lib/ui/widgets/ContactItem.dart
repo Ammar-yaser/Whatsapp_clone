@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-// Pages && Widgets
-import '../screens/chat/Chat.dart';
-
 class ContactItem extends StatelessWidget {
   final String image, name, lastMessage, date;
+  final Function openChat;
+  const ContactItem(
+      {this.image, this.name, this.lastMessage, this.date, this.openChat});
 
-  const ContactItem({this.image, this.name, this.lastMessage, this.date});
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -14,14 +13,7 @@ class ContactItem extends StatelessWidget {
       child: Column(
         children: <Widget>[
           InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => Chat(),
-                ),
-              );
-            },
+            onTap: openChat,
             onLongPress: () {
               // TODO: delete chat
             },

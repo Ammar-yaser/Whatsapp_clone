@@ -15,32 +15,31 @@ class Registration extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Selector<RegistState, bool>(
-        selector: (context, registState) => registState.isLoading,
-        builder: (context, isLoading, _) {
-          return ModalProgressHUD(
-            inAsyncCall: isLoading,
-            child: SafeArea(
-              child: Container(
-                padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
-                child: Column(
-                  children: [
-                    Text('Enter your phone number',
-                        style: theme.textTheme.headline6),
-                    SizedBox(height: 15),
-                    Text(
-                      'We will send OTP code for verification your phone number',
-                      style: theme.textTheme.caption,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 25),
-                    RegistrationForm(),
-                  ],
+          selector: (context, registState) => registState.isLoading,
+          builder: (context, isLoading, _) {
+            return ModalProgressHUD(
+              inAsyncCall: isLoading,
+              child: SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
+                  child: Column(
+                    children: [
+                      Text('Enter your phone number',
+                          style: theme.textTheme.headline6),
+                      SizedBox(height: 15),
+                      Text(
+                        'We will send OTP code for verification your phone number',
+                        style: theme.textTheme.caption,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 25),
+                      RegistrationForm(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }
-      ),
+            );
+          }),
     );
   }
 }
@@ -108,10 +107,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 phone: phone,
                 sendData: () async {
                   await registState.verifyPhone(
-                    pinPage: () =>
-                        Navigator.pushNamed(context, SmsVerification.id),
+                    pinPage: () => Navigator.pushNamed(
+                      context,
+                      SmsVerification.id,
+                    ),
                     onAutoRetrievComplete: () =>
-                        Navigator.pushNamed(context, UserInfoData.id),
+                        Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      UserInfoData.id,
+                      (Route route) => false,
+                    ),
                   );
                 },
               );

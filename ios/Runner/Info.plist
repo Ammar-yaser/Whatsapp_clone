@@ -41,6 +41,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSContactsUsageDescription</key>  
+	<string>This app requires contacts access to function properly.</string> 
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Requierd for get images from your device</string>
 	<key>NSCameraUsageDescription</key>

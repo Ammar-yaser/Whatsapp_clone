@@ -131,7 +131,11 @@ class SmsConfirmCode extends StatelessWidget {
         );
       }
     } else {
-      Navigator.pushNamed(context, UserInfoData.id);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        UserInfoData.id,
+        (Route route) => false,
+      );
     }
   }
 }
@@ -170,7 +174,6 @@ class _TimerTextState extends State<TimerText> {
   @override
   void dispose() {
     _timer.cancel();
-    Provider.of<RegistState>(context, listen: false).isTimeout = false;
     super.dispose();
   }
 

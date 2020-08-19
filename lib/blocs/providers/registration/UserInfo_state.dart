@@ -9,7 +9,7 @@ AuthServices auth = AuthServices();
 UserDataServices userDataServices = UserDataServices();
 
 class UserInfoState with ChangeNotifier {
-  String _name, _about, _imageURL;
+  String _name, _about, _imageUrl;
 
   bool _isLoading = false;
 

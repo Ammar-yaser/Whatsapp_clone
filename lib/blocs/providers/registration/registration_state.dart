@@ -11,8 +11,9 @@ class RegistState with ChangeNotifier {
       _phone, // phone number picker
       _errorVerMessage = '', // the errors of verification phone number
       _smsCode, // sms code picker from user if auto retriev failed
-      _verId; // verification id used for sign in with credential maniually
-  int _resendToken;
+      _verId,  // verification id used for sign in with credential maniually
+      _userId;
+
   bool _isTimeout = false, // for auto retriev timeout
       _isLoading = false; // for modal progress hud to display loading indicator
 
@@ -49,6 +50,7 @@ class RegistState with ChangeNotifier {
   //Getters
   String get phoneCode => _phoneCode;
   String get errorVerMessage => _errorVerMessage;
+  String get userId => _userId;
   bool get isTimeout => _isTimeout;
   bool get isLoading => _isLoading;
 
@@ -60,6 +62,7 @@ class RegistState with ChangeNotifier {
       ApiResponse<FirebaseUser> response = await auth.signIn(cred);
       if (!response.error) {
         isLoading = false;
+        _userId = response.data.uid;
         onAutoRetrievComplete();
       }
     };
@@ -97,14 +100,16 @@ class RegistState with ChangeNotifier {
       verificationFailed: verificationfailed,
       codeSent: smsSent,
       codeAutoRetrievalTimeout: autoTimeout,
-      forceResendingToken: _resendToken
+      // forceResendingToken: _resendToken
     );
   }
 
   // Registration maniually if auto retriev timedout
   Future<ApiResponse<FirebaseUser>> maniualRegistration() async {
-    Future<ApiResponse<FirebaseUser>> result =
-        auth.signInWithOTP(_smsCode, _verId);
+    ApiResponse<FirebaseUser> result =
+        await auth.signInWithOTP(_smsCode, _verId);
+
+    _userId = result.data.uid;
 
     return result;
   }

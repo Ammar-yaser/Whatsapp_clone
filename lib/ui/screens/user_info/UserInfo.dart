@@ -21,10 +21,6 @@ class UserInfoData extends StatelessWidget {
             builder: (cxt, isLoading, _) {
               return ModalProgressHUD(
                 inAsyncCall: isLoading,
-                // just test 
-                progressIndicator: Container(
-                  child: Text('No internet connection'),
-                ),
                 child: SafeArea(
                   child: SingleChildScrollView(
                     child: Container(
@@ -132,9 +128,8 @@ class _InfoFieldsState extends State<InfoFields> {
               padding: const EdgeInsets.only(top: 12, bottom: 12),
               onPressed: () {
                 infoKey.currentState.save(); // save form data
-                info
-                    .saveUserInfo()
-                    .then((_) => Navigator.pushNamed(context, Home.id));
+                info.saveUserInfo().then(
+                    (_) => Navigator.pushReplacementNamed(context, Home.id));
               },
             ),
           ),

@@ -25,6 +25,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
+      'userId': userId,
       'phone': phone,
       'name': name ?? '',
       'about': about ?? '',

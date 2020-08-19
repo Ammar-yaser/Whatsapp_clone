@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'blocs/validators/FormsValidation.dart';
 
 // Pages
+import 'ui/screens/chat/Chat.dart';
 import 'ui/screens/user_info/UserInfo.dart';
 import 'blocs/providers/registration/registration_state.dart';
 import 'services/auth_services.dart';
@@ -43,13 +44,14 @@ class StartPoint extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Color.fromRGBO(9, 94, 84, 1),
+        accentColor: Color.fromRGBO(220, 248, 198, 1),
         textTheme: TextTheme().copyWith(
           headline6: TextStyle(fontSize: 18),
           caption: TextStyle(fontSize: 14),
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: UserInfoData.id,
+      initialRoute: Registration.id,//Home.id,
       routes: {
         Registration.id: (BuildContext context) => Registration(),
         SmsVerification.id: (BuildContext context) => SmsVerification(),
