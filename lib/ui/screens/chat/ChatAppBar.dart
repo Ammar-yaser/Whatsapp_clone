@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ChatAppBar extends StatelessWidget {
+  final String name;
+
+  const ChatAppBar({this.name});
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -36,7 +39,7 @@ class ChatAppBar extends StatelessWidget {
               Expanded(
                 child: Container(
                   child: Text(
-                    'Ammar',
+                    name,
                     style:
                         theme.textTheme.headline6.copyWith(color: Colors.white),
                   ),

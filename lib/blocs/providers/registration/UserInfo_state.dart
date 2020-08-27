@@ -30,7 +30,7 @@ class UserInfoState with ChangeNotifier {
       isLoading = true;
       User userData = User(
         userId: currentUser.data.uid,
-        phone: currentUser.data.phoneNumber,
+        mobile: currentUser.data.phoneNumber,
         name: _name,
         about: _about,
       );

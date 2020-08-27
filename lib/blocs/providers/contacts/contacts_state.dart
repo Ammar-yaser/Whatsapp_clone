@@ -9,8 +9,8 @@ ContactsServices data = ContactsServices();
 
 class ContactsState {
 
-  Future<List<UserContacts>> contactsList(String userId) async {
-    ApiResponse<List<UserContacts>> result = await data.getContacts(userId);
+  Future<List<UserContact>> chatsList(String userId) async {
+    ApiResponse<List<UserContact>> result = await data.getContacts(userId);
 
     if (result.error == false) {
       return result.data;
@@ -19,8 +19,8 @@ class ContactsState {
     }
   }
 
-  Future<List<ContactModel>> contacts() async {
-    List<ContactModel> contactsFromDB = await data.contactsListOnDB();
+  Future<List<UserContact>> contacts() async {
+    List<UserContact> contactsFromDB = await data.contactsListOnDB();
     
     return contactsFromDB;
   }

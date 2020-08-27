@@ -1,27 +1,28 @@
-import 'dart:async';
-
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
+import 'package:whatsapp_clone/models/UserContacts.dart';
 
 import 'ChatAppBar.dart';
 
 class Chat extends StatelessWidget {
+  final UserContact contactData;
 
-
+  const Chat({this.contactData});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: Container(
-          child: Column(
-        children: [
-          ChatAppBar(),
-          Expanded(child: ChatMessages()),
-          ChatMessagesFields(),
-          // Emoji(),
-        ],
-      )),
+        child: Column(
+          children: [
+            ChatAppBar(name: contactData.name),
+            Expanded(child: ChatMessages()),
+            ChatMessagesFields(),
+            // Emoji(),
+          ],
+        ),
+      ),
     );
   }
 }

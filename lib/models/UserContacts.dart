@@ -1,22 +1,25 @@
-class UserContacts {
+class UserContact {
   String contactId;
   String name;
   String mobile;
-  String image;
+  String imgUrl;
+  String about;
 
-  UserContacts({
+  UserContact({
     this.contactId,
     this.name,
     this.mobile,
-    this.image,
+    this.imgUrl,
+    this.about,
   });
 
-  factory UserContacts.fromJson(Map<String, dynamic> data) {
-    return UserContacts(
+  factory UserContact.fromJson(Map<String, dynamic> data) {
+    return UserContact(
       contactId: data['contactId'],
       name: data['name'],
       mobile: data['mobile'],
-      image: data['image'],
+      imgUrl: data['imgUrl'],
+      about: data['about']
     );
   }
 
@@ -25,24 +28,8 @@ class UserContacts {
       'contactId': contactId,
       'name': name ?? '',
       'mobile': mobile,
-      'image': image ?? '',
+      'imgUrl': imgUrl ?? '',
+      'about' : about ?? ''
     };
   }
-}
-
-class ContactModel {
-  String contactId;
-  String name;
-  String mobile;
-  String image;
-  String about;
-
-  ContactModel({
-    this.name,
-    this.mobile,
-    this.contactId,
-    this.image,
-    this.about,
-  });
-  
 }

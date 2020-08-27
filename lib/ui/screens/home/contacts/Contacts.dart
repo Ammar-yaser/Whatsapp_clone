@@ -12,9 +12,11 @@ class Contacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RegistState registInfo = Provider.of<RegistState>(context, listen: false);
+    ContactsState contactsState =
+        Provider.of<ContactsState>(context, listen: false);
     return Container(
-      child: FutureBuilder<List<UserContacts>>(
-        future: ContactsState().contactsList(registInfo.userId),
+      child: FutureBuilder<List<UserContact>>(
+        future: contactsState.chatsList(registInfo.userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error));

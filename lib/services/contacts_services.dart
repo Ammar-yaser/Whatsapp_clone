@@ -11,19 +11,19 @@ class ContactsServices {
   final String _users = 'users';
   final String _contacts = 'contacts';
 
-  Future<ApiResponse<List<UserContacts>>> getContacts(String docId) {
-    Future<ApiResponse<List<UserContacts>>> response = _db
+  Future<ApiResponse<List<UserContact>>> getContacts(String docId) {
+    Future<ApiResponse<List<UserContact>>> response = _db
         .collection(_users)
         .document(docId)
         .collection(_contacts)
         .getDocuments()
         .then((result) {
-      List<UserContacts> contactsList = result.documents.map(
+      List<UserContact> contactsList = result.documents.map(
         (doc) {
-          return UserContacts.fromJson(doc.data);
+          return UserContact.fromJson(doc.data);
         },
       ).toList();
-      return ApiResponse<List<UserContacts>>(
+      return ApiResponse<List<UserContact>>(
         data: contactsList,
         error: false,
       );
@@ -33,10 +33,9 @@ class ContactsServices {
     return response;
   }
 
-  Future<List<ContactModel>> contactsListOnDB() async {
-    print('get contacts from device');
+  Future<List<UserContact>> contactsListOnDB() async {
     bool status = await Permission.contacts.request().isGranted;
-    List<ContactModel> contactsList = List();
+    List<UserContact> contactsList = List();
     Future<void> result;
 
     if (status) {
@@ -51,13 +50,15 @@ class ContactsServices {
         if (mobile != '') {
           result = checkContactOnDB(mobile).then((response) {
             if (response.error == false) {
-              contactsList.add(ContactModel(
-                name: contact.displayName,
-                mobile: mobile,
-                contactId: response.data.userId,
-                image: response.data.profileImage,
-                about: response.data.about,
-              ));
+              contactsList.add(
+                UserContact(
+                  name: contact.displayName,
+                  mobile: mobile,
+                  contactId: response.data.userId,
+                  imgUrl: response.data.imgUrl,
+                  about: response.data.about,
+                ),
+              );
             }
           });
         }
@@ -92,5 +93,20 @@ class ContactsServices {
     });
 
     return response;
+  }
+
+  
+  Future<void> saveContactOnChatContacts(
+      String userId, UserContact contactData) async {
+    try {
+      await _db
+          .collection(_users)
+          .document(userId)
+          .collection(_contacts)
+          .document(contactData.contactId)
+          .setData(contactData.toMap());
+    } catch (e) {
+      print("error: $e");
+    }
   }
 }

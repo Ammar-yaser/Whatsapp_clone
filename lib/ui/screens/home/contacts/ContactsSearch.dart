@@ -3,7 +3,7 @@ import 'package:whatsapp_clone/models/UserContacts.dart';
 import 'package:whatsapp_clone/ui/screens/chat/Chat.dart';
 
 class ContactsSearchDelegate extends SearchDelegate {
-  final Future<List<ContactModel>> contacts;
+  final Future<List<UserContact>> contacts;
 
   ContactsSearchDelegate(this.contacts);
   @override
@@ -24,7 +24,7 @@ class ContactsSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder<List<ContactModel>>(
+    return FutureBuilder<List<UserContact>>(
       future: contacts.then((value) {
         return value
             .where((element) =>
@@ -48,7 +48,10 @@ class ContactsSearchDelegate extends SearchDelegate {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Chat()),
+                      builder: (BuildContext context) => Chat(
+                        contactData: snapshot.data[index],
+                      ),
+                    ),
                   );
                 },
               );

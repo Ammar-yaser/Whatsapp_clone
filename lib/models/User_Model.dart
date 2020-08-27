@@ -1,35 +1,35 @@
 class User {
   String userId;
-  String phone;
+  String mobile;
   String name;
   String about;
-  String profileImage;
+  String imgUrl;
 
   User({
     this.userId,
-    this.phone,
+    this.mobile,
     this.name,
     this.about,
-    this.profileImage,
+    this.imgUrl,
   });
 
   factory User.fromJson(Map<String, dynamic> user) {
     return User(
       userId: user['userId'],
-      phone: user['phone'],
+      mobile: user['mobile'],
       name: user['name'],
       about: user['about'],
-      profileImage: user['image'],
+      imgUrl: user['imgUrl'],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
-      'phone': phone,
+      'mobile': mobile,
       'name': name ?? '',
-      'about': about ?? '',
-      'image': profileImage ?? '',
+      'about': about ?? "Hey there, I'm using WhatsApp",
+      'imgUrl': imgUrl ?? '',
     };
   }
 }

@@ -10,7 +10,7 @@ class SharedPrefServices {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     bool isIdSaved = await prefs.setString(_id, userData.userId);
-    bool isMobileSaved = await prefs.setString(_mobile, userData.phone);
+    bool isMobileSaved = await prefs.setString(_mobile, userData.mobile);
 
     if (isIdSaved && isMobileSaved) {
       await prefs.setBool(_remember, true);

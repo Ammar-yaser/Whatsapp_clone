@@ -69,7 +69,7 @@ class RegistState with ChangeNotifier {
         isLoading = false;
         User userData = User(
           userId: response.data.uid,
-          phone: response.data.phoneNumber,
+          mobile: response.data.phoneNumber,
         );
         prefServices.setLocalUserData(userData);
         _userId = userData.userId;
@@ -122,7 +122,7 @@ class RegistState with ChangeNotifier {
     if (result.error == false) {
       User userData = User(
         userId: result.data.uid,
-        phone: result.data.phoneNumber,
+        mobile: result.data.phoneNumber,
       );
       prefServices.setLocalUserData(userData);
       _userId = userData.userId;
