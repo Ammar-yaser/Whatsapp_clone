@@ -29,3 +29,20 @@ class UserContacts {
     };
   }
 }
+
+class ContactModel {
+  String contactId;
+  String name;
+  String mobile;
+  String image;
+  String about;
+
+  ContactModel({
+    this.name,
+    this.mobile,
+    this.contactId,
+    this.image,
+    this.about,
+  });
+  
+}

@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/models/User_Model.dart';
+import 'package:whatsapp_clone/services/shared_pref_services.dart';
 import '../../../services/auth_services.dart';
 import '../../../models/api_response.dart';
 
 AuthServices auth = AuthServices();
+SharedPrefServices prefServices = SharedPrefServices();
 FirebaseAuth _auth = FirebaseAuth.instance;
 
 class RegistState with ChangeNotifier {
@@ -11,7 +14,7 @@ class RegistState with ChangeNotifier {
       _phone, // phone number picker
       _errorVerMessage = '', // the errors of verification phone number
       _smsCode, // sms code picker from user if auto retriev failed
-      _verId,  // verification id used for sign in with credential maniually
+      _verId, // verification id used for sign in with credential maniually
       _userId;
 
   bool _isTimeout = false, // for auto retriev timeout
@@ -37,6 +40,7 @@ class RegistState with ChangeNotifier {
 
   // set verification code from pin code fields if user enter it maniually
   set setSmsCode(String val) => _smsCode = val;
+  set setUserId(String val) => _userId = val;
   set isTimeout(bool val) {
     _isTimeout = val;
     notifyListeners();
@@ -59,10 +63,16 @@ class RegistState with ChangeNotifier {
       {Function pinPage, Function onAutoRetrievComplete}) async {
     final PhoneVerificationCompleted verified = (AuthCredential cred) async {
       isLoading = true;
+
       ApiResponse<FirebaseUser> response = await auth.signIn(cred);
       if (!response.error) {
         isLoading = false;
-        _userId = response.data.uid;
+        User userData = User(
+          userId: response.data.uid,
+          phone: response.data.phoneNumber,
+        );
+        prefServices.setLocalUserData(userData);
+        _userId = userData.userId;
         onAutoRetrievComplete();
       }
     };
@@ -109,8 +119,16 @@ class RegistState with ChangeNotifier {
     ApiResponse<FirebaseUser> result =
         await auth.signInWithOTP(_smsCode, _verId);
 
-    _userId = result.data.uid;
+    if (result.error == false) {
+      User userData = User(
+        userId: result.data.uid,
+        phone: result.data.phoneNumber,
+      );
+      prefServices.setLocalUserData(userData);
+      _userId = userData.userId;
+    }
 
+    
     return result;
   }
 }

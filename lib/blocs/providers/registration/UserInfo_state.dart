@@ -4,9 +4,11 @@ import '../../../models/User_Model.dart';
 import '../../../models/api_response.dart';
 import '../../../services/auth_services.dart';
 import '../../../services/user_info_services.dart';
+import '../../../services/shared_pref_services.dart';
 
 AuthServices auth = AuthServices();
 UserDataServices userDataServices = UserDataServices();
+SharedPrefServices prefServices = SharedPrefServices();
 
 class UserInfoState with ChangeNotifier {
   String _name, _about, _imageUrl;
@@ -32,10 +34,10 @@ class UserInfoState with ChangeNotifier {
         name: _name,
         about: _about,
       );
-      await userDataServices
-          .createUserData(userData)
-          .then((_) => isLoading = false)
-          .catchError((e) {
+      await userDataServices.createUserData(userData).then((_) {
+        isLoading = false;
+        prefServices.setLocalUserData(userData);
+      }).catchError((e) {
         print(e);
       });
     }

@@ -1,9 +1,14 @@
+import 'dart:async';
+
+import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 
 import 'ChatAppBar.dart';
 
 class Chat extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +18,8 @@ class Chat extends StatelessWidget {
         children: [
           ChatAppBar(),
           Expanded(child: ChatMessages()),
-          ChatTextField(),
+          ChatMessagesFields(),
+          // Emoji(),
         ],
       )),
     );
@@ -81,8 +87,70 @@ class ChatMessages extends StatelessWidget {
               textAlign: TextAlign.left,
             ),
           ),
-          // ChatTextField(),
         ],
+      ),
+    );
+  }
+}
+
+class ChatMessagesFields extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.face,
+                    color: Colors.grey[500],
+                  ),
+                  Expanded(
+                    child: ChatTextField(),
+                  ),
+                  Icon(
+                    Icons.attach_file,
+                    color: Colors.grey[500],
+                  ),
+                  SizedBox(width: 18),
+                  Icon(
+                    Icons.camera_alt,
+                    color: Colors.grey[500],
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(width: 6),
+          SendMessageBtn(),
+        ],
+      ),
+    );
+  }
+}
+
+class SendMessageBtn extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: InkWell(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Icon(
+            Icons.send,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
@@ -95,63 +163,53 @@ class ChatTextField extends StatefulWidget {
 
 class _ChatTextFieldState extends State<ChatTextField> {
   OutlineInputBorder fieldBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(10),
+    borderRadius: BorderRadius.circular(0),
     borderSide: BorderSide.none,
   );
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  Widget build(BuildContext context) {
+    return TextField(
+      onChanged: (_) {
+        // _runTimer();
+      },
+      onSubmitted: (_) {
+        // _sendMessage();
+      },
+      // controller: _textEditingController,
+      decoration: InputDecoration(
+        isDense: true,
+        hintText: 'Type a message...',
+        enabledBorder: fieldBorder,
+        focusedBorder: fieldBorder,
+        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 11),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      minLines: 1,
+      maxLines: 4,
+      style: TextStyle(height: 1.6),
+    );
   }
+}
 
+class Emoji extends StatefulWidget {
+  @override
+  _EmojiState createState() => _EmojiState();
+}
+
+class _EmojiState extends State<Emoji> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              child: TextField(
-                onChanged: (_) {
-                  // _runTimer();
-                },
-                onSubmitted: (_) {
-                  // _sendMessage();
-                },
-                // controller: _textEditingController,
-                decoration: InputDecoration(
-                  isDense: true,
-                  hintText: 'Type a message...',
-                  enabledBorder: fieldBorder,
-                  focusedBorder: fieldBorder,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                minLines: 1,
-                maxLines: 4,
-                style: TextStyle(height: 1.5),
-              ),
-            ),
-          ),
-          SizedBox(width: 10),
-          InkWell(
-            child: Container(
-              // height: 30,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Icon(
-                Icons.send,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+      child: EmojiPicker(
+        rows: 3,
+        columns: 7,
+        recommendKeywords: ["racing", "horse"],
+        numRecommended: 10,
+        onEmojiSelected: (emoji, category) {
+          print(emoji);
+        },
       ),
     );
   }

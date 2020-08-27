@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:whatsapp_clone/blocs/providers/registration/registration_state.dart';
-import '../../../blocs/providers/contacts/contacts_state.dart';
-import '../../../models/UserContacts.dart';
+import '../../../../blocs/providers/registration/registration_state.dart';
+import '../../../../blocs/providers/contacts/contacts_state.dart';
+import '../../../../models/UserContacts.dart';
 
 // Pages && widgets
-import '../../widgets/ContactItem.dart';
-import '../chat/Chat.dart';
+import '../../../widgets/ContactItem.dart';
+import '../../chat/Chat.dart';
 
 class Contacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    RegistState info = Provider.of<RegistState>(context, listen: false);
+    RegistState registInfo = Provider.of<RegistState>(context, listen: false);
     return Container(
       child: FutureBuilder<List<UserContacts>>(
-        future: ContactsState.contactsList(info.userId),
+        future: ContactsState().contactsList(registInfo.userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error));

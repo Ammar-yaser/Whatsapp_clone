@@ -3,10 +3,11 @@ import 'package:provider/provider.dart';
 import 'blocs/validators/FormsValidation.dart';
 
 // Pages
+import 'ui/screens/SplashScreen.dart';
 import 'ui/screens/chat/Chat.dart';
 import 'ui/screens/user_info/UserInfo.dart';
 import 'blocs/providers/registration/registration_state.dart';
-import 'services/auth_services.dart';
+import 'services/shared_pref_services.dart';
 import 'ui/screens/home/Home.dart';
 import 'ui/screens/registration/Registration.dart';
 import 'ui/screens/registration/sms_verification/smsVerification.dart';
@@ -27,8 +28,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<RegistState>(
           create: (_) => RegistState(),
         ),
-        Provider<AuthServices>(
-          create: (_) => AuthServices(),
+        Provider<SharedPrefServices>(
+          create: (_) => SharedPrefServices(),
         ),
       ],
       child: StartPoint(),
@@ -51,8 +52,9 @@ class StartPoint extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: Registration.id,//Home.id,
+      initialRoute: SplashScreen.id,
       routes: {
+        SplashScreen.id: (BuildContext context) => SplashScreen(),
         Registration.id: (BuildContext context) => Registration(),
         SmsVerification.id: (BuildContext context) => SmsVerification(),
         UserInfoData.id: (BuildContext context) => UserInfoData(),
