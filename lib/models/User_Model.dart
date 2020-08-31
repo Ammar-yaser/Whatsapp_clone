@@ -1,11 +1,11 @@
-class User {
+class UserModel {
   String userId;
   String mobile;
   String name;
   String about;
   String imgUrl;
 
-  User({
+  UserModel({
     this.userId,
     this.mobile,
     this.name,
@@ -13,8 +13,8 @@ class User {
     this.imgUrl,
   });
 
-  factory User.fromJson(Map<String, dynamic> user) {
-    return User(
+  factory UserModel.fromJson(Map<String, dynamic> user) {
+    return UserModel(
       userId: user['userId'],
       mobile: user['mobile'],
       name: user['name'],

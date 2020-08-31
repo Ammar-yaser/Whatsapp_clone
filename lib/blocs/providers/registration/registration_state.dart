@@ -64,10 +64,10 @@ class RegistState with ChangeNotifier {
     final PhoneVerificationCompleted verified = (AuthCredential cred) async {
       isLoading = true;
 
-      ApiResponse<FirebaseUser> response = await auth.signIn(cred);
+      ApiResponse<User> response = await auth.signIn(cred);
       if (!response.error) {
         isLoading = false;
-        User userData = User(
+        UserModel userData = UserModel(
           userId: response.data.uid,
           mobile: response.data.phoneNumber,
         );
@@ -77,9 +77,10 @@ class RegistState with ChangeNotifier {
       }
     };
 
-    final PhoneVerificationFailed verificationfailed = (AuthException e) {
+    final PhoneVerificationFailed verificationfailed =
+        (FirebaseAuthException e) {
       switch (e.code) {
-        case "invalidCredential":
+        case "invalid-phone-number":
           errorVerMessage = "incorrect Phone number";
           break;
         case "verifyPhoneNumberError":
@@ -115,12 +116,12 @@ class RegistState with ChangeNotifier {
   }
 
   // Registration maniually if auto retriev timedout
-  Future<ApiResponse<FirebaseUser>> maniualRegistration() async {
-    ApiResponse<FirebaseUser> result =
+  Future<ApiResponse<User>> maniualRegistration() async {
+    ApiResponse<User> result =
         await auth.signInWithOTP(_smsCode, _verId);
 
     if (result.error == false) {
-      User userData = User(
+      UserModel userData = UserModel(
         userId: result.data.uid,
         mobile: result.data.phoneNumber,
       );
@@ -128,7 +129,6 @@ class RegistState with ChangeNotifier {
       _userId = userData.userId;
     }
 
-    
     return result;
   }
 }

@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/User_Model.dart';
 
-final Firestore _firestore = Firestore.instance;
+final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 class UserDataServices {
   final String users = 'users';
 
-  Future<void> createUserData(User user) async {
+  Future<void> createUserData(UserModel user) async {
     try {
-      await _firestore
+      await _db
           .collection(users)
-          .document(user.userId)
-          .setData(user.toMap());
+          .doc(user.userId)
+          .set(user.toMap());
     } catch (e) {
       print(e.code);
     }

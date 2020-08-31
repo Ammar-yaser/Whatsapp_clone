@@ -1,5 +1,4 @@
 import 'package:whatsapp_clone/models/UserContacts.dart';
-import 'package:whatsapp_clone/models/User_Model.dart';
 
 import 'package:whatsapp_clone/models/api_response.dart';
 

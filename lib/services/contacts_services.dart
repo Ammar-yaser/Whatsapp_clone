@@ -5,7 +5,7 @@ import 'package:whatsapp_clone/models/User_Model.dart';
 import '../models/api_response.dart';
 import '../models/UserContacts.dart';
 
-final Firestore _db = Firestore.instance;
+final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 class ContactsServices {
   final String _users = 'users';
@@ -14,13 +14,13 @@ class ContactsServices {
   Future<ApiResponse<List<UserContact>>> getContacts(String docId) {
     Future<ApiResponse<List<UserContact>>> response = _db
         .collection(_users)
-        .document(docId)
+        .doc(docId)
         .collection(_contacts)
-        .getDocuments()
+        .get()
         .then((result) {
-      List<UserContact> contactsList = result.documents.map(
+      List<UserContact> contactsList = result.docs.map(
         (doc) {
-          return UserContact.fromJson(doc.data);
+          return UserContact.fromJson(doc.data());
         },
       ).toList();
       return ApiResponse<List<UserContact>>(
@@ -70,26 +70,26 @@ class ContactsServices {
     });
   }
 
-  Future<ApiResponse<User>> checkContactOnDB(String mobile) async {
+  Future<ApiResponse<UserModel>> checkContactOnDB(String mobile) async {
     if (mobile.length == 11) {
       mobile = "+2$mobile";
     } else if (mobile.length == 12) {
       mobile = "+$mobile";
     }
 
-    ApiResponse<User> response = await _db
+    ApiResponse<UserModel> response = await _db
         .collection(_users)
         .where('phone', isEqualTo: "$mobile")
-        .getDocuments()
+        .get()
         .then((data) {
-      if (data.documents.length != 0) {
-        return ApiResponse<User>(
-            data: User.fromJson(data.documents[0].data), error: false);
+      if (data.docs.length != 0) {
+        return ApiResponse<UserModel>(
+            data: UserModel.fromJson(data.docs[0].data()), error: false);
       } else {
-        return ApiResponse<User>(error: true, errorMessage: 'not exist');
+        return ApiResponse<UserModel>(error: true, errorMessage: 'not exist');
       }
     }).catchError((e) {
-      return ApiResponse<User>(error: true, errorMessage: 'Error $e');
+      return ApiResponse<UserModel>(error: true, errorMessage: 'Error $e');
     });
 
     return response;
@@ -101,10 +101,10 @@ class ContactsServices {
     try {
       await _db
           .collection(_users)
-          .document(userId)
+          .doc(userId)
           .collection(_contacts)
-          .document(contactData.contactId)
-          .setData(contactData.toMap());
+          .doc(contactData.contactId)
+          .set(contactData.toMap());
     } catch (e) {
       print("error: $e");
     }

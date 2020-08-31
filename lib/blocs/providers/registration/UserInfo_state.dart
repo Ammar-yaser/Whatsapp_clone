@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../models/User_Model.dart';
-import '../../../models/api_response.dart';
 import '../../../services/auth_services.dart';
 import '../../../services/user_info_services.dart';
 import '../../../services/shared_pref_services.dart';
@@ -25,21 +24,21 @@ class UserInfoState with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Future<void> saveUserInfo() async {
-    ApiResponse<FirebaseUser> currentUser = await auth.getCurrentUser();
-    if (!currentUser.error) {
-      isLoading = true;
-      User userData = User(
-        userId: currentUser.data.uid,
-        mobile: currentUser.data.phoneNumber,
-        name: _name,
-        about: _about,
-      );
-      await userDataServices.createUserData(userData).then((_) {
-        isLoading = false;
-        prefServices.setLocalUserData(userData);
-      }).catchError((e) {
-        print(e);
-      });
-    }
+    isLoading = true;
+
+    User currentUser = auth.getCurrentUser();
+    UserModel userData = UserModel(
+      userId: currentUser.uid,
+      mobile: currentUser.phoneNumber,
+      name: _name,
+      about: _about,
+    );
+
+    await userDataServices.createUserData(userData).then((_) {
+      isLoading = false;
+      prefServices.setLocalUserData(userData);
+    }).catchError((e) {
+      print(e);
+    });
   }
 }

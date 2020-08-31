@@ -1,6 +1,5 @@
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:bubble/bubble.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone/blocs/providers/chat/chat_state.dart';
 import 'package:whatsapp_clone/models/UserContacts.dart';

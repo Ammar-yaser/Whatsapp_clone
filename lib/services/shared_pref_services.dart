@@ -6,7 +6,7 @@ class SharedPrefServices {
   static const String _mobile = 'mobile';
   static const String _remember = 'remember';
   
-  Future<void> setLocalUserData(User userData) async {
+  Future<void> setLocalUserData(UserModel userData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     bool isIdSaved = await prefs.setString(_id, userData.userId);
