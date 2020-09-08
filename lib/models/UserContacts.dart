@@ -4,6 +4,7 @@ class UserContact {
   String mobile;
   String imgUrl;
   String about;
+  String chatId;
 
   UserContact({
     this.contactId,
@@ -11,6 +12,7 @@ class UserContact {
     this.mobile,
     this.imgUrl,
     this.about,
+    this.chatId
   });
 
   factory UserContact.fromJson(Map<String, dynamic> data) {
@@ -19,7 +21,8 @@ class UserContact {
       name: data['name'],
       mobile: data['mobile'],
       imgUrl: data['imgUrl'],
-      about: data['about']
+      about: data['about'],
+      chatId: data['chatId']
     );
   }
 
@@ -29,7 +32,8 @@ class UserContact {
       'name': name ?? '',
       'mobile': mobile,
       'imgUrl': imgUrl ?? '',
-      'about' : about ?? ''
+      'about' : about ?? '',
+      'chatId': chatId
     };
   }
 }

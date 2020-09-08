@@ -16,7 +16,7 @@ class Contacts extends StatelessWidget {
         Provider.of<ContactsState>(context, listen: false);
     return Container(
       child: FutureBuilder<List<UserContact>>(
-        future: contactsState.chatsList(registInfo.userId),
+        future: contactsState.getContacts(registInfo.userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error));

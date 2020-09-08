@@ -11,7 +11,7 @@ class ContactsServices {
   final String _users = 'users';
   final String _contacts = 'contacts';
 
-  Future<ApiResponse<List<UserContact>>> getContacts(String docId) {
+  Future<ApiResponse<List<UserContact>>> getAllContacts(String docId) {
     Future<ApiResponse<List<UserContact>>> response = _db
         .collection(_users)
         .doc(docId)
@@ -33,7 +33,7 @@ class ContactsServices {
     return response;
   }
 
-  Future<List<UserContact>> contactsListOnDB() async {
+  Future<List<UserContact>> registeredUsersInContacts() async {
     bool status = await Permission.contacts.request().isGranted;
     List<UserContact> contactsList = List();
     Future<void> result;
@@ -48,7 +48,7 @@ class ContactsServices {
         String mobile = phones.isNotEmpty ? phones.first.value : '';
 
         if (mobile != '') {
-          result = checkContactOnDB(mobile).then((response) {
+          result = isMobileExist(mobile).then((response) {
             if (response.error == false) {
               contactsList.add(
                 UserContact(
@@ -70,7 +70,7 @@ class ContactsServices {
     });
   }
 
-  Future<ApiResponse<UserModel>> checkContactOnDB(String mobile) async {
+  Future<ApiResponse<UserModel>> isMobileExist(String mobile) async {
     if (mobile.length == 11) {
       mobile = "+2$mobile";
     } else if (mobile.length == 12) {
@@ -95,7 +95,6 @@ class ContactsServices {
     return response;
   }
 
-  
   Future<void> saveContactOnChatContacts(
       String userId, UserContact contactData) async {
     try {
@@ -108,5 +107,14 @@ class ContactsServices {
     } catch (e) {
       print("error: $e");
     }
+  }
+
+  Future<void> saveContact(String userId, UserContact contact) async {
+    await _db
+        .collection(_users)
+        .doc(userId)
+        .collection(_contacts)
+        .doc(contact.contactId)
+        .set(contact.toMap());
   }
 }

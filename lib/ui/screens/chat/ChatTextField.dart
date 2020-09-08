@@ -29,6 +29,8 @@ class _ChatTextFieldState extends State<ChatTextField> {
       onChanged: (val) {
         // _runTimer();
         chatState.showMic = val == '';
+        chatState.setMessage = val;
+        print('val: $val');
       },
       onSubmitted: (_) {
         // _sendMessage();

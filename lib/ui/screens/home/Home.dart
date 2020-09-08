@@ -52,9 +52,10 @@ class _HomePageState extends State<HomePage>
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () async {
+              var searchList = contactsState.availableUsersFromContacts();
               showSearch(
                 context: context,
-                delegate: ContactsSearchDelegate(contactsState.contacts()),
+                delegate: ContactsSearchDelegate(searchList),
               );
             },
           ),
