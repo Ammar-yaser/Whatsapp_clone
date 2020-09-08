@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone/blocs/validators/FormsValidation.dart';
+import 'package:whatsapp_clone/ui/screens/home/Home.dart';
 import '../../../blocs/providers/registration/registration_state.dart';
 import '../../widgets/PhoneNumber.dart';
 import '../user_info/UserInfo.dart';
@@ -111,12 +112,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       context,
                       SmsVerification.id,
                     ),
-                    onAutoRetrievComplete: () =>
-                        Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      UserInfoData.id,
-                      (Route route) => false,
-                    ),
+                    onAutoRetrievComplete: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        registState.isNewUser ? UserInfoData.id : Home.id,
+                        (Route route) => false,
+                      );
+                    },
                   );
                 },
               );

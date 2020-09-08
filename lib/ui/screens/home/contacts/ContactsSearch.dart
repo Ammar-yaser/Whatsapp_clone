@@ -32,6 +32,7 @@ class ContactsSearchDelegate extends SearchDelegate {
             .toList();
       }),
       builder: (context, snapshot) {
+        print('build');
         if (!snapshot.hasData) {
           return Center(child: CircularProgressIndicator());
         } else {

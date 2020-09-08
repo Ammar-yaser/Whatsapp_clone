@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone/blocs/providers/chat/chat_state.dart';
+import 'package:whatsapp_clone/blocs/providers/registration/registration_state.dart';
 import 'package:whatsapp_clone/services/chat_services.dart';
 
 class SendMessageBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ChatState chatState = Provider.of<ChatState>(context);
+    RegistState registState = Provider.of<RegistState>(context);
     return Container(
       child: InkWell(
         child: Container(
@@ -16,13 +18,13 @@ class SendMessageBtn extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           child: Icon(
-            Icons.send,
+            chatState.showMic ? Icons.mic : Icons.send,
             color: Colors.white,
           ),
         ),
         onTap: () {
           print('send');
-          ChatServices().createChat();
+          chatState.createChatonDb(registState.userId);
           chatState.chatController.clear();
         },
       ),

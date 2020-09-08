@@ -16,7 +16,7 @@ class Chat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ChatState>(
-      create: (_) => ChatState(),
+      create: (_) => ChatState(contactData),
       child: Scaffold(
         backgroundColor: Colors.grey[300],
         body: Container(

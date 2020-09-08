@@ -78,7 +78,7 @@ class SmsConfirmCode extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             onPressed: isTimeout
                 ? () async {
-                    ApiResponse<User> response =
+                    ApiResponse<UserCredential> response =
                         await registState.maniualRegistration();
                     confirmBtn(context, response, registState.verifyPhone());
                   }
@@ -90,7 +90,7 @@ class SmsConfirmCode extends StatelessWidget {
   }
 
   void confirmBtn(
-      context, ApiResponse<User> response, Future<void> resend) {
+      context, ApiResponse<UserCredential> response, Future<void> resend) {
     if (response.error) {
       if (response.errorMessage.contains('re-send')) {
         showBottomSheet(

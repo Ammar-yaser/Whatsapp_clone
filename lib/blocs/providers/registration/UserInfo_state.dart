@@ -36,7 +36,7 @@ class UserInfoState with ChangeNotifier {
 
     await userDataServices.createUserData(userData).then((_) {
       isLoading = false;
-      prefServices.setLocalUserData(userData);
+      // prefServices.setLocalUserData(userData, true);
     }).catchError((e) {
       print(e);
     });

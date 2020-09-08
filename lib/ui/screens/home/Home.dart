@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_clone/blocs/providers/contacts/contacts_state.dart';
+import 'package:whatsapp_clone/blocs/providers/registration/registration_state.dart';
+import 'package:whatsapp_clone/ui/screens/registration/Registration.dart';
 
 // Pages
 import 'Calls.dart';
@@ -41,6 +44,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     ContactsState contactsState =
         Provider.of<ContactsState>(context, listen: false);
+    RegistState registState = Provider.of<RegistState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('WhatsApp'),
@@ -54,21 +58,31 @@ class _HomePageState extends State<HomePage>
               );
             },
           ),
-          PopupMenuButton(
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  child: Text('New group'),
-                ),
-                PopupMenuItem(
-                  child: Text('New broadcast'),
-                ),
-                PopupMenuItem(
-                  child: Text('Settings'),
-                ),
-              ];
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              registState.signOut();
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(builder: (_) => Registration()),
+                  (route) => false);
             },
           ),
+          // PopupMenuButton(
+          //   itemBuilder: (BuildContext context) {
+          //     return [
+          //       PopupMenuItem(
+          //         child: Text('New group'),
+          //       ),
+          //       PopupMenuItem(
+          //         child: Text('New broadcast'),
+          //       ),
+          //       PopupMenuItem(
+          //         child: Text('Settings'),
+          //       ),
+          //     ];
+          //   },
+          // ),
         ],
         // flexibleSpace: SafeArea(child: SearchBar()),
         bottom: TabBar(

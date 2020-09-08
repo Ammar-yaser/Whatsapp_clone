@@ -51,7 +51,7 @@ class ContactItem extends StatelessWidget {
                                   Text(
                                     lastMessage,
                                     style: theme.textTheme.caption,
-                                  )
+                                  ),
                                 ],
                               ),
                             ),

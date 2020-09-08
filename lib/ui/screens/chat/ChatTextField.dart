@@ -26,8 +26,9 @@ class _ChatTextFieldState extends State<ChatTextField> {
     ChatState chatState = Provider.of<ChatState>(context);
     return TextField(
       controller: chatFieldController,
-      onChanged: (_) {
+      onChanged: (val) {
         // _runTimer();
+        chatState.showMic = val == '';
       },
       onSubmitted: (_) {
         // _sendMessage();

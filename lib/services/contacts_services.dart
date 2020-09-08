@@ -79,7 +79,7 @@ class ContactsServices {
 
     ApiResponse<UserModel> response = await _db
         .collection(_users)
-        .where('phone', isEqualTo: "$mobile")
+        .where('mobile', isEqualTo: "$mobile")
         .get()
         .then((data) {
       if (data.docs.length != 0) {

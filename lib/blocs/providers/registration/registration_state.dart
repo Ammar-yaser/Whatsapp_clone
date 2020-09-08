@@ -5,7 +5,7 @@ import 'package:whatsapp_clone/services/shared_pref_services.dart';
 import '../../../services/auth_services.dart';
 import '../../../models/api_response.dart';
 
-AuthServices auth = AuthServices();
+AuthServices authServices = AuthServices();
 SharedPrefServices prefServices = SharedPrefServices();
 FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -18,7 +18,8 @@ class RegistState with ChangeNotifier {
       _userId;
 
   bool _isTimeout = false, // for auto retriev timeout
-      _isLoading = false; // for modal progress hud to display loading indicator
+      _isLoading = false, // for modal progress hud to display loading indicator
+      _isNewUser = false;
 
   // Setters
   void setPhone(String val) => _phone = "$_phoneCode$val";
@@ -57,6 +58,7 @@ class RegistState with ChangeNotifier {
   String get userId => _userId;
   bool get isTimeout => _isTimeout;
   bool get isLoading => _isLoading;
+  bool get isNewUser => _isNewUser;
 
   // phone number verfication and auto retrieval sms code
   Future<void> verifyPhone(
@@ -64,14 +66,15 @@ class RegistState with ChangeNotifier {
     final PhoneVerificationCompleted verified = (AuthCredential cred) async {
       isLoading = true;
 
-      ApiResponse<User> response = await auth.signIn(cred);
+      ApiResponse<UserCredential> response = await authServices.signIn(cred);
       if (!response.error) {
         isLoading = false;
+        _isNewUser = response.data.additionalUserInfo.isNewUser;
         UserModel userData = UserModel(
-          userId: response.data.uid,
-          mobile: response.data.phoneNumber,
+          userId: response.data.user.uid,
+          mobile: response.data.user.phoneNumber,
         );
-        prefServices.setLocalUserData(userData);
+        prefServices.setLocalUserData(userData: userData, isRemembered: true);
         _userId = userData.userId;
         onAutoRetrievComplete();
       }
@@ -83,11 +86,11 @@ class RegistState with ChangeNotifier {
         case "invalid-phone-number":
           errorVerMessage = "incorrect Phone number";
           break;
-        case "verifyPhoneNumberError":
+        case "network-request-failed":
           errorVerMessage = "No internet connection";
           break;
         default:
-          print(e.code);
+          errorVerMessage = e.code;
       }
       isLoading = false;
     };
@@ -116,19 +119,27 @@ class RegistState with ChangeNotifier {
   }
 
   // Registration maniually if auto retriev timedout
-  Future<ApiResponse<User>> maniualRegistration() async {
-    ApiResponse<User> result =
-        await auth.signInWithOTP(_smsCode, _verId);
+  Future<ApiResponse<UserCredential>> maniualRegistration() async {
+    ApiResponse<UserCredential> result =
+        await authServices.signInWithOTP(_smsCode, _verId);
 
     if (result.error == false) {
       UserModel userData = UserModel(
-        userId: result.data.uid,
-        mobile: result.data.phoneNumber,
+        userId: result.data.user.uid,
+        mobile: result.data.user.phoneNumber,
       );
-      prefServices.setLocalUserData(userData);
+      prefServices.setLocalUserData(userData: userData, isRemembered: true);
       _userId = userData.userId;
     }
 
     return result;
+  }
+
+  Future<void> signOut() async {
+    await authServices.signOut();
+    User currentUser = authServices.getCurrentUser();
+    if (currentUser == null) {
+      prefServices.setLocalUserData(isRemembered: false);
+    }
   }
 }

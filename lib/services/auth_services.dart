@@ -6,48 +6,46 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 
 class AuthServices {
   //SignIn
-  Future<ApiResponse<User>> signIn(AuthCredential authCreds) async {
-    UserCredential response;
-    ApiResponse<User> result;
-
+  Future<ApiResponse<UserCredential>> signIn(AuthCredential authCreds) async {
+    ApiResponse<UserCredential> result;
     try {
-      response = await _auth.signInWithCredential(authCreds);
-      result = ApiResponse<User>(data: response.user, error: false);
+      UserCredential response = await _auth.signInWithCredential(authCreds);
+      result = ApiResponse<UserCredential>(data: response, error: false);
     } on PlatformException catch (e) {
       switch (e.code) {
         case 'ERROR_SESSION_EXPIRED':
-          result = ApiResponse<User>(
+          result = ApiResponse<UserCredential>(
             error: true,
             errorMessage:
                 "The sms verification code has expired. re-send it and try again",
           );
           break;
         case 'ERROR_INVALID_VERIFICATION_CODE':
-          result = ApiResponse<User>(
+          result = ApiResponse<UserCredential>(
             error: true,
             errorMessage: "The sms verification code is invalid. Try again",
           );
           break;
         case 'ERROR_NETWORK_REQUEST_FAILED':
-          result = ApiResponse<User>(
+          result = ApiResponse<UserCredential>(
             error: true,
             errorMessage: "Check internet connection",
           );
           break;
         case 'error':
-          result = ApiResponse<User>(
+          result = ApiResponse<UserCredential>(
             error: true,
             errorMessage: "Invalid Sms code",
           );
           break;
         default:
-          result = ApiResponse<User>(
+          result = ApiResponse<UserCredential>(
             error: true,
             errorMessage: "There is something error",
           );
       }
     } catch (e) {
-      result = ApiResponse<User>(
+      result = ApiResponse<UserCredential>(
         error: true,
         errorMessage: "There is something error",
       );
@@ -56,7 +54,7 @@ class AuthServices {
     return result;
   }
 
-  Future<ApiResponse<User>> signInWithOTP(String smsCode, String verId) {
+  Future<ApiResponse<UserCredential>> signInWithOTP(String smsCode, String verId) {
     AuthCredential authCreds = PhoneAuthProvider.credential(
       verificationId: verId,
       smsCode: smsCode,
@@ -70,7 +68,7 @@ class AuthServices {
   }
 
   //Sign out
-  signOut() {
-    _auth.signOut();
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }

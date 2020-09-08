@@ -5,8 +5,13 @@ final FirebaseFirestore _db = FirebaseFirestore.instance;
 class ChatServices {
   static const String chats = 'chats';
 
-  createChat() {
-    _db.collection(chats).doc().set({"contact1": "test1", "contact2": "test2"});
+  createChat(String userId,String contactId) {
+    _db.collection(chats).add(
+      {
+        'member1' : userId,
+        'member2' : contactId 
+      },
+    ).then((value) => print(value.id));
   }
 
   sendMessage() {}
